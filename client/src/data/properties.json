@@ -1,0 +1,112 @@
+[
+  {
+    "id": "1",
+    "title": "Modern Luxury Villa",
+    "price": 4500,
+    "address": "123 Palm Avenue, Beverly Hills, CA",
+    "bedrooms": 4,
+    "bathrooms": 3.5,
+    "sqft": 3200,
+    "description": "Experience luxury living in this stunning modern villa. Featuring an open-concept layout, gourmet kitchen, and a private backyard oasis.",
+    "features": ["Pool", "Garage", "Smart Home", "Garden"],
+    "type": "House",
+    "location": "Beverly Hills",
+    "images": [
+      "placeholder-exterior",
+      "placeholder-living",
+      "placeholder-kitchen",
+      "placeholder-bedroom"
+    ],
+    "featured": true
+  },
+  {
+    "id": "2",
+    "title": "Downtown Loft",
+    "price": 2800,
+    "address": "456 Main St, Downtown, CA",
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "sqft": 1500,
+    "description": "Stylish loft in the heart of the city. High ceilings, exposed brick, and floor-to-ceiling windows offering breathtaking city views.",
+    "features": ["Gym", "Concierge", "Rooftop", "Parking"],
+    "type": "Apartment",
+    "location": "Downtown",
+    "images": [
+      "placeholder-living",
+      "placeholder-kitchen"
+    ],
+    "featured": true
+  },
+  {
+    "id": "3",
+    "title": "Cozy Suburban Home",
+    "price": 3200,
+    "address": "789 Maple Dr, Suburbia, CA",
+    "bedrooms": 3,
+    "bathrooms": 2.5,
+    "sqft": 2400,
+    "description": "Perfect family home in a quiet neighborhood. Spacious yard, updated kitchen, and close to top-rated schools.",
+    "features": ["Backyard", "Fireplace", "Garage", "Pet Friendly"],
+    "type": "House",
+    "location": "Suburbs",
+    "images": [
+      "placeholder-exterior",
+      "placeholder-bedroom"
+    ],
+    "featured": false
+  },
+  {
+    "id": "4",
+    "title": "Seaside Condo",
+    "price": 3500,
+    "address": "101 Ocean Blvd, Seaside, CA",
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "sqft": 1200,
+    "description": "Wake up to the sound of waves. This beachfront condo offers direct beach access and a private balcony with ocean views.",
+    "features": ["Ocean View", "Pool", "Balcony", "Security"],
+    "type": "Condo",
+    "location": "Seaside",
+    "images": [
+      "placeholder-living",
+      "placeholder-exterior"
+    ],
+    "featured": true
+  },
+  {
+    "id": "5",
+    "title": "Urban Studio",
+    "price": 1800,
+    "address": "202 Market St, City Center, CA",
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "sqft": 800,
+    "description": "Compact and efficient studio apartment perfect for young professionals. Walking distance to public transit and nightlife.",
+    "features": ["Laundry", "Bike Storage", "Elevator"],
+    "type": "Studio",
+    "location": "City Center",
+    "images": [
+      "placeholder-living"
+    ],
+    "featured": false
+  },
+  {
+    "id": "6",
+    "title": "Luxury Penthouse",
+    "price": 7500,
+    "address": "999 Skyline Dr, Metropolis, CA",
+    "bedrooms": 3,
+    "bathrooms": 4,
+    "sqft": 4000,
+    "description": "Top of the world living. This penthouse features private elevator access, a wrap-around terrace, and premium finishes throughout.",
+    "features": ["Terrace", "Private Elevator", "Spa", "Concierge"],
+    "type": "Penthouse",
+    "location": "Metropolis",
+    "images": [
+      "placeholder-living",
+      "placeholder-kitchen",
+      "placeholder-bedroom"
+    ],
+    "featured": true
+  }
+]
