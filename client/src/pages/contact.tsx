@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Phone, Mail, MessageSquare } from "lucide-react";
+import MapView from "@/components/map-view";
 
 export default function Contact() {
   return (
@@ -13,8 +14,8 @@ export default function Contact() {
       <Navbar />
       
       <div className="bg-primary py-16 text-center">
-        <h1 className="font-heading text-4xl font-bold text-white mb-4">Contact Us</h1>
-        <p className="text-primary-foreground/80 max-w-xl mx-auto px-4">
+        <h1 className="font-heading text-4xl font-bold text-white mb-4" data-aos="zoom-in">Contact Us</h1>
+        <p className="text-primary-foreground/80 max-w-xl mx-auto px-4" data-aos="fade-up" data-aos-delay="200">
           We're here to help. Reach out to us for any inquiries or support.
         </p>
       </div>
@@ -22,7 +23,7 @@ export default function Contact() {
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Contact Info */}
-          <div className="lg:col-span-1 space-y-8">
+          <div className="lg:col-span-1 space-y-8" data-aos="fade-right">
             <div>
               <h2 className="font-heading text-2xl font-bold text-primary mb-6">Get in Touch</h2>
               <p className="text-muted-foreground mb-8">
@@ -67,7 +68,7 @@ export default function Contact() {
           </div>
 
           {/* Contact Form */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-8" data-aos="fade-left">
             <Card>
               <CardHeader>
                 <CardTitle>Send us a Message</CardTitle>
@@ -95,12 +96,21 @@ export default function Contact() {
                     <Textarea id="message" placeholder="Your message..." className="min-h-[150px]" />
                   </div>
 
-                  <Button className="w-full bg-primary text-white font-bold h-12">
+                  <Button className="w-full bg-primary text-white font-bold h-12 hover:bg-primary/90">
                     Send Message
                   </Button>
                 </form>
               </CardContent>
             </Card>
+            
+            {/* Map */}
+            <div className="h-[300px] w-full rounded-xl overflow-hidden shadow-sm border">
+              <MapView 
+                zoom={15}
+                markers={[{ position: [34.0522, -118.2437], title: "Choice Properties HQ", description: "123 Real Estate Ave" }]}
+                className="h-full w-full"
+              />
+            </div>
           </div>
         </div>
       </div>

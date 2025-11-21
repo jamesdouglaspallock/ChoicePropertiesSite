@@ -10,6 +10,7 @@ import propertiesData from "@/data/properties.json";
 import type { Property } from "@/lib/types";
 import { MapPin, Bed, Bath, Maximize, Check, Share2, ArrowLeft } from "lucide-react";
 import NotFound from "@/pages/not-found";
+import MapView from "@/components/map-view";
 
 // Images
 import placeholderExterior from "@assets/generated_images/modern_luxury_home_exterior_with_blue_sky.png";
@@ -33,6 +34,13 @@ export default function PropertyDetails() {
     return <NotFound />;
   }
 
+  // Mock coordinates for demo (would come from DB in real app)
+  // Randomize slightly around a central point based on ID
+  const baseLat = 34.0522;
+  const baseLng = -118.2437;
+  const offset = parseInt(property.id) * 0.01;
+  const position: [number, number] = [baseLat + offset, baseLng - offset];
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
@@ -48,7 +56,7 @@ export default function PropertyDetails() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Gallery */}
-            <div className="rounded-xl overflow-hidden border bg-muted/10">
+            <div className="rounded-xl overflow-hidden border bg-muted/10" data-aos="fade-up">
               <Carousel className="w-full">
                 <CarouselContent>
                   {property.images.map((imgKey, index) => (
@@ -69,7 +77,7 @@ export default function PropertyDetails() {
             </div>
 
             {/* Title & Address */}
-            <div>
+            <div data-aos="fade-up" data-aos-delay="100">
               <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-2">
@@ -91,7 +99,7 @@ export default function PropertyDetails() {
             <Separator />
 
             {/* Key Stats */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-4" data-aos="fade-up" data-aos-delay="200">
               <div className="flex flex-col items-center p-4 bg-muted/20 rounded-lg">
                 <Bed className="h-6 w-6 text-primary mb-2" />
                 <span className="font-bold text-lg">{property.bedrooms}</span>
@@ -110,7 +118,7 @@ export default function PropertyDetails() {
             </div>
 
             {/* Description */}
-            <div>
+            <div data-aos="fade-up" data-aos-delay="300">
               <h2 className="font-heading text-xl font-bold mb-4">About this property</h2>
               <p className="text-muted-foreground leading-relaxed">
                 {property.description}
@@ -118,7 +126,7 @@ export default function PropertyDetails() {
             </div>
 
             {/* Features */}
-            <div>
+            <div data-aos="fade-up" data-aos-delay="400">
               <h2 className="font-heading text-xl font-bold mb-4">Amenities & Features</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {property.features.map((feature, index) => (
@@ -131,10 +139,21 @@ export default function PropertyDetails() {
                 ))}
               </div>
             </div>
+
+            {/* Map */}
+            <div data-aos="fade-up" data-aos-delay="500">
+              <h2 className="font-heading text-xl font-bold mb-4">Location</h2>
+              <MapView 
+                center={position} 
+                zoom={14}
+                markers={[{ position, title: property.title, description: property.address }]}
+                className="h-[300px] w-full rounded-xl"
+              />
+            </div>
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-6" data-aos="fade-left" data-aos-delay="600">
             <Card className="sticky top-24 border-2 border-primary/10 shadow-lg">
               <CardContent className="p-6 space-y-6">
                 <div className="text-center">
@@ -144,7 +163,7 @@ export default function PropertyDetails() {
 
                 <div className="space-y-3">
                   <Link href={`/apply?propertyId=${property.id}`}>
-                    <Button className="w-full h-12 text-lg font-bold bg-secondary hover:bg-secondary/90 text-primary-foreground">
+                    <Button className="w-full h-12 text-lg font-bold bg-secondary hover:bg-secondary/90 text-primary-foreground shadow-md hover:shadow-lg transition-all">
                       Apply Now
                     </Button>
                   </Link>

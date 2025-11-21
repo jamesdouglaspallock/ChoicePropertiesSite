@@ -5,7 +5,7 @@ import { Link } from "wouter";
 import { PropertyCard } from "@/components/property-card";
 import propertiesData from "@/data/properties.json";
 import type { Property } from "@/lib/types";
-import { ArrowRight, CheckCircle2, Search, Home as HomeIcon, Key } from "lucide-react";
+import { ArrowRight, CheckCircle2, Users, Home as HomeIcon, MapPin, ShieldCheck } from "lucide-react";
 import heroBg from "@assets/generated_images/modern_luxury_home_exterior_with_blue_sky.png";
 
 export default function Home() {
@@ -14,35 +14,41 @@ export default function Home() {
   const featuredProperties = properties.filter((p) => p.featured).slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col overflow-x-hidden">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[700px] flex items-center justify-center overflow-hidden">
         {/* Background Image with Overlay */}
         <div 
-          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transform scale-105"
           style={{ backgroundImage: `url(${heroBg})` }}
         >
-          <div className="absolute inset-0 bg-primary/60 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/70 via-primary/50 to-background/90 backdrop-blur-[1px]" />
         </div>
 
-        <div className="container relative z-10 px-4 text-center text-white space-y-6">
-          <h1 className="font-heading text-4xl md:text-6xl font-bold tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            Find Your Perfect <span className="text-secondary">Home</span>
-          </h1>
-          <p className="text-lg md:text-xl max-w-2xl mx-auto text-white/90 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-            Browse our exclusive selection of premium rental properties. 
-            Simple application process, transparent pricing, and exceptional service.
+        <div className="container relative z-10 px-4 text-center text-white space-y-8 max-w-4xl">
+          <div data-aos="fade-down">
+            <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-4 leading-tight">
+              Find the home that <span className="text-secondary">fits your life</span>
+            </h1>
+            <p className="text-lg md:text-2xl text-white/90 font-light">
+              Your Trusted Rental Housing Partner
+            </p>
+          </div>
+          
+          <p className="text-lg md:text-xl max-w-2xl mx-auto text-white/80 leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+            At Choice Properties, we are dedicated to solving one of life’s most important needs—finding a place you can truly call home.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6" data-aos="fade-up" data-aos-delay="400">
             <Link href="/properties">
-              <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-primary-foreground font-bold text-lg px-8 h-14">
-                Browse Properties
+              <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-primary-foreground font-bold text-lg px-10 h-14 shadow-xl hover:scale-105 transition-transform">
+                Browse Rentals
               </Button>
             </Link>
             <Link href="/contact">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary font-bold text-lg px-8 h-14 bg-transparent">
+              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-primary font-bold text-lg px-10 h-14 bg-transparent hover:scale-105 transition-transform">
                 Contact Us
               </Button>
             </Link>
@@ -50,92 +56,149 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Properties */}
-      <section className="py-20 bg-muted/30">
+      {/* Why Choose Us Section */}
+      <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-end mb-10">
+          <div className="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+            <h2 className="font-heading text-3xl md:text-5xl font-bold text-primary mb-6">Why Renters Choose Choice Properties</h2>
+            <p className="text-muted-foreground text-lg">
+              We streamline communication between renters, property owners, leasing agents, and property managers—ensuring a smooth and transparent approval process.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                icon: <CheckCircle2 className="h-10 w-10 text-secondary" />,
+                title: "Fast & Easy Process",
+                description: "We streamline communication for a smooth and transparent approval process."
+              },
+              {
+                icon: <ShieldCheck className="h-10 w-10 text-secondary" />,
+                title: "High Approval Rates",
+                description: "We work with landlords who understand real life. Even with credit challenges, we help you find options."
+              },
+              {
+                icon: <HomeIcon className="h-10 w-10 text-secondary" />,
+                title: "Every Lifestyle",
+                description: "From affordable apartments to spacious homes, we offer rental opportunities for everyone."
+              },
+              {
+                icon: <MapPin className="h-10 w-10 text-secondary" />,
+                title: "Nationwide Coverage",
+                description: "Our network spans multiple states and cities, giving you access to hundreds of rentals."
+              }
+            ].map((feature, idx) => (
+              <div 
+                key={idx} 
+                className="group p-8 rounded-2xl bg-card border border-border/50 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
+                data-aos="fade-up"
+                data-aos-delay={idx * 100}
+              >
+                <div className="mb-6 p-4 rounded-full bg-primary/5 w-fit group-hover:bg-primary/10 transition-colors">
+                  {feature.icon}
+                </div>
+                <h3 className="font-heading text-xl font-bold mb-3 text-primary">{feature.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Who We Help Banner */}
+      <section className="py-20 bg-primary text-white overflow-hidden relative">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div data-aos="fade-right">
+              <h2 className="font-heading text-3xl md:text-5xl font-bold mb-6">Who We Help</h2>
+              <p className="text-lg text-white/80 mb-8 leading-relaxed">
+                We specialize in matching renters with properties that fit their lifestyle, budget, and needs. 
+                Wherever you are in the USA, Choice Properties is ready to pair you with a home that’s right for you.
+              </p>
+              <ul className="space-y-4">
+                {[
+                  "Working professionals",
+                  "Families and single parents",
+                  "Students & First-time renters",
+                  "Relocating individuals",
+                  "Renters rebuilding credit",
+                  "Those seeking second-chance housing"
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-center text-lg font-medium">
+                    <CheckCircle2 className="h-6 w-6 text-secondary mr-3 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="relative" data-aos="fade-left">
+              <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10">
+                <img 
+                  src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                  alt="Happy family moving in" 
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                />
+              </div>
+              {/* Floating Badge */}
+              <div className="absolute -bottom-6 -left-6 bg-secondary text-primary-foreground p-6 rounded-xl shadow-xl hidden md:block">
+                <p className="text-3xl font-bold">100%</p>
+                <p className="text-sm font-semibold uppercase tracking-wider">Verified Listings</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Properties */}
+      <section className="py-24 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-end mb-12" data-aos="fade-up">
             <div>
               <h2 className="font-heading text-3xl md:text-4xl font-bold text-primary mb-2">Featured Properties</h2>
-              <p className="text-muted-foreground">Hand-picked selections just for you.</p>
+              <p className="text-muted-foreground text-lg">Hand-picked selections just for you.</p>
             </div>
             <Link href="/properties">
-              <Button variant="link" className="text-secondary font-semibold hidden md:flex group">
-                View All <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              <Button variant="link" className="text-secondary font-bold text-lg hidden md:flex group">
+                View All Listings <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProperties.map((property) => (
-              <PropertyCard key={property.id} property={property} />
+            {featuredProperties.map((property, idx) => (
+              <div key={property.id} data-aos="fade-up" data-aos-delay={idx * 100}>
+                <PropertyCard property={property} />
+              </div>
             ))}
           </div>
 
-          <div className="mt-10 text-center md:hidden">
+          <div className="mt-12 text-center md:hidden">
             <Link href="/properties">
-              <Button className="w-full bg-outline border-primary text-primary">View All Properties</Button>
+              <Button className="w-full bg-outline border-primary text-primary h-12 font-bold">View All Properties</Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="font-heading text-3xl md:text-4xl font-bold text-primary mb-4">How It Works</h2>
-            <p className="text-muted-foreground text-lg">Finding your next rental is easy with Choice Properties.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {/* Step 1 */}
-            <div className="relative flex flex-col items-center text-center p-6 rounded-2xl bg-muted/20 hover:bg-muted/40 transition-colors duration-300">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6">
-                <Search className="h-8 w-8" />
-              </div>
-              <h3 className="font-heading text-xl font-bold mb-3">1. Search</h3>
-              <p className="text-muted-foreground">
-                Browse our curated list of high-quality properties. Filter by location, price, and amenities to find your match.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="relative flex flex-col items-center text-center p-6 rounded-2xl bg-muted/20 hover:bg-muted/40 transition-colors duration-300">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6">
-                <CheckCircle2 className="h-8 w-8" />
-              </div>
-              <h3 className="font-heading text-xl font-bold mb-3">2. Apply</h3>
-              <p className="text-muted-foreground">
-                Submit your application online in minutes. Our secure platform makes screening quick and hassle-free.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="relative flex flex-col items-center text-center p-6 rounded-2xl bg-muted/20 hover:bg-muted/40 transition-colors duration-300">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6">
-                <Key className="h-8 w-8" />
-              </div>
-              <h3 className="font-heading text-xl font-bold mb-3">3. Move In</h3>
-              <p className="text-muted-foreground">
-                Get approved and sign your lease digitally. Pick up your keys and start enjoying your new home.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
-      <section className="py-20 bg-primary text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="font-heading text-3xl md:text-4xl font-bold mb-6">Ready to find your new home?</h2>
-          <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto mb-10">
-            Browse our listings today and find the perfect property that fits your lifestyle and budget.
-          </p>
-          <Link href="/properties">
-            <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-primary-foreground font-bold h-14 px-10 text-lg">
-              Start Searching Now
-            </Button>
-          </Link>
+      <section className="py-24 bg-white relative overflow-hidden">
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <div data-aos="zoom-in">
+            <h2 className="font-heading text-4xl md:text-5xl font-bold text-primary mb-6">Your next rental starts here.</h2>
+            <p className="text-muted-foreground text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+              We don’t just list properties—we guide you through the entire process. 
+              From viewing a home to getting your application approved, we’re with you every step of the way.
+            </p>
+            <Link href="/properties">
+              <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-primary-foreground font-bold h-16 px-12 text-xl shadow-lg hover:shadow-xl transition-all">
+                Start Searching Now
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
