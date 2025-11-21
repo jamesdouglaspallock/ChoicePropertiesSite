@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { PropertyCard } from "@/components/property-card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
+import MapView from "@/components/map-view";
 import propertiesData from "@/data/properties.json";
 import type { Property } from "@/lib/types";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search } from "lucide-react";
 
 export default function Properties() {
   const allProperties = propertiesData as Property[];
@@ -17,14 +15,9 @@ export default function Properties() {
   
   // Filters
   const [search, setSearch] = useState("");
-  const [location, setLocation] = useState("all");
-  const [type, setType] = useState("all");
-  const [priceRange, setPriceRange] = useState([0, 10000]);
-  const [bedrooms, setBedrooms] = useState("all");
-
-  // Unique locations and types for dropdowns
-  const locations = Array.from(new Set(allProperties.map(p => p.location)));
-  const types = Array.from(new Set(allProperties.map(p => p.type)));
+  const [priceMax, setPriceMax] = useState("any");
+  const [bedrooms, setBedrooms] = useState("any");
+  const [homeType, setHomeType] = useState("any");
 
   useEffect(() => {
     let result = allProperties;
@@ -37,152 +30,151 @@ export default function Properties() {
       );
     }
 
-    if (location !== "all") {
-      result = result.filter(p => p.location === location);
+    if (priceMax !== "any") {
+      result = result.filter(p => p.price <= parseInt(priceMax));
     }
 
-    if (type !== "all") {
-      result = result.filter(p => p.type === type);
-    }
-
-    if (bedrooms !== "all") {
+    if (bedrooms !== "any") {
       result = result.filter(p => p.bedrooms >= parseInt(bedrooms));
     }
 
-    result = result.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
+    if (homeType !== "any") {
+        result = result.filter(p => p.type === homeType);
+    }
 
     setFilteredProperties(result);
-  }, [search, location, type, priceRange, bedrooms, allProperties]);
+  }, [search, priceMax, bedrooms, homeType, allProperties]);
 
-  const clearFilters = () => {
-    setSearch("");
-    setLocation("all");
-    setType("all");
-    setPriceRange([0, 10000]);
-    setBedrooms("all");
-  };
+  // Mock map markers
+  const mapMarkers = filteredProperties.map(p => {
+      const offset = parseInt(p.id) * 0.005;
+      return {
+          position: [34.0522 + offset, -118.2437 - offset] as [number, number],
+          title: `$${p.price.toLocaleString()}`,
+          description: p.address
+      }
+  });
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
       <Navbar />
       
-      <div className="bg-primary py-12 text-center">
-        <h1 className="font-heading text-3xl md:text-4xl font-bold text-white mb-4">Our Properties</h1>
-        <p className="text-primary-foreground/80 max-w-xl mx-auto px-4">
-          Explore our diverse collection of rental properties designed to fit your lifestyle.
-        </p>
-      </div>
-
-      <div className="container mx-auto px-4 py-8">
-        {/* Filters Section */}
-        <div className="bg-card rounded-lg shadow-sm border p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-heading text-lg font-semibold flex items-center">
-              <SlidersHorizontal className="h-4 w-4 mr-2" /> Filter Properties
-            </h2>
-            <Button variant="ghost" size="sm" onClick={clearFilters} className="text-muted-foreground hover:text-primary">
-              <X className="h-4 w-4 mr-1" /> Clear Filters
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="space-y-2">
-              <Label>Search</Label>
-              <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+      {/* Zillow-style Subheader Filter Bar */}
+      <div className="border-b bg-white shadow-sm p-3 z-20">
+        <div className="container mx-auto max-w-7xl flex flex-col md:flex-row gap-3 items-center">
+            <div className="relative flex-1 w-full md:w-auto">
                 <Input 
-                  placeholder="Address, Title..." 
-                  className="pl-8" 
+                  placeholder="Address, Neighborhood, or Zip" 
+                  className="pl-3 pr-10 h-10 border-gray-300 focus:border-primary" 
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-              </div>
+                <Search className="absolute right-3 top-2.5 h-5 w-5 text-primary cursor-pointer" />
             </div>
 
-            <div className="space-y-2">
-              <Label>Location</Label>
-              <Select value={location} onValueChange={setLocation}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Any Location" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Any Location</SelectItem>
-                  {locations.map(loc => (
-                    <SelectItem key={loc} value={loc}>{loc}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+                <Select value={priceMax} onValueChange={setPriceMax}>
+                    <SelectTrigger className="w-[140px] h-10 border-gray-300">
+                        <SelectValue placeholder="Price" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="any">Any Price</SelectItem>
+                        <SelectItem value="1000">$1,000+</SelectItem>
+                        <SelectItem value="2000">$2,000+</SelectItem>
+                        <SelectItem value="3000">$3,000+</SelectItem>
+                        <SelectItem value="4000">$4,000+</SelectItem>
+                        <SelectItem value="5000">$5,000+</SelectItem>
+                    </SelectContent>
+                </Select>
 
-            <div className="space-y-2">
-              <Label>Property Type</Label>
-              <Select value={type} onValueChange={setType}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Any Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Any Type</SelectItem>
-                  {types.map(t => (
-                    <SelectItem key={t} value={t}>{t}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                <Select value={bedrooms} onValueChange={setBedrooms}>
+                    <SelectTrigger className="w-[120px] h-10 border-gray-300">
+                        <SelectValue placeholder="Beds" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="any">Any Beds</SelectItem>
+                        <SelectItem value="1">1+ Bd</SelectItem>
+                        <SelectItem value="2">2+ Bd</SelectItem>
+                        <SelectItem value="3">3+ Bd</SelectItem>
+                        <SelectItem value="4">4+ Bd</SelectItem>
+                    </SelectContent>
+                </Select>
 
-            <div className="space-y-2">
-              <Label>Bedrooms (Min)</Label>
-              <Select value={bedrooms} onValueChange={setBedrooms}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Any" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Any</SelectItem>
-                  <SelectItem value="1">1+</SelectItem>
-                  <SelectItem value="2">2+</SelectItem>
-                  <SelectItem value="3">3+</SelectItem>
-                  <SelectItem value="4">4+</SelectItem>
-                </SelectContent>
-              </Select>
+                <Select value={homeType} onValueChange={setHomeType}>
+                    <SelectTrigger className="w-[140px] h-10 border-gray-300">
+                        <SelectValue placeholder="Home Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="any">Any Type</SelectItem>
+                        <SelectItem value="House">Houses</SelectItem>
+                        <SelectItem value="Apartment">Apartments</SelectItem>
+                        <SelectItem value="Condo">Condos</SelectItem>
+                        <SelectItem value="Townhome">Townhomes</SelectItem>
+                    </SelectContent>
+                </Select>
+                
+                <Button variant="outline" className="h-10 border-primary text-primary hover:bg-primary/5" onClick={() => {
+                    setSearch("");
+                    setPriceMax("any");
+                    setBedrooms("any");
+                    setHomeType("any");
+                }}>Save Search</Button>
             </div>
-          </div>
-          
-          <div className="mt-6 space-y-2">
-            <div className="flex justify-between text-sm">
-              <Label>Price Range</Label>
-              <span className="font-medium text-primary">${priceRange[0]} - ${priceRange[1]}+</span>
-            </div>
-            <Slider 
-              defaultValue={[0, 10000]} 
-              max={10000} 
-              step={100} 
-              value={priceRange}
-              onValueChange={setPriceRange}
-              className="py-4"
-            />
-          </div>
         </div>
-
-        {/* Results Grid */}
-        <div className="mb-4 text-muted-foreground">
-          Showing {filteredProperties.length} properties
-        </div>
-
-        {filteredProperties.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProperties.map((property) => (
-              <PropertyCard key={property.id} property={property} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-20 bg-muted/20 rounded-lg">
-            <h3 className="text-xl font-bold text-muted-foreground">No properties found</h3>
-            <p className="text-muted-foreground mt-2">Try adjusting your filters to see more results.</p>
-            <Button onClick={clearFilters} variant="outline" className="mt-4">Reset Filters</Button>
-          </div>
-        )}
       </div>
 
-      <Footer />
+      {/* Split Layout: Map (Right) & List (Left) */}
+      <div className="flex-1 flex overflow-hidden relative">
+         {/* Right Side Map (Mobile hidden or stacked) */}
+         <div className="hidden lg:block w-1/2 h-full relative z-0">
+             <MapView 
+                center={[34.0522, -118.2437]} 
+                zoom={12}
+                markers={mapMarkers}
+                className="h-full w-full rounded-none border-none"
+             />
+             {/* Floating pill buttons on map */}
+             <div className="absolute top-4 left-4 z-[400] flex gap-2">
+                 <Button variant="secondary" size="sm" className="shadow-md bg-white text-gray-800 hover:bg-gray-100">Draw</Button>
+                 <Button variant="secondary" size="sm" className="shadow-md bg-white text-gray-800 hover:bg-gray-100">Satellite</Button>
+             </div>
+         </div>
+
+         {/* Left Side List */}
+         <div className="w-full lg:w-1/2 h-full overflow-y-auto p-4 shadow-2xl z-10 bg-white">
+             <div className="flex justify-between items-center mb-4 px-2">
+                 <h2 className="text-xl font-bold text-gray-900">Real Estate & Homes For Rent</h2>
+                 <span className="text-gray-500 text-sm">{filteredProperties.length} results</span>
+             </div>
+             
+             <div className="mb-4 flex gap-2 px-2">
+                 <span className="text-sm font-semibold text-primary border-b-2 border-primary cursor-pointer pb-1">Agent Listings</span>
+                 <span className="text-sm text-gray-500 hover:text-gray-800 cursor-pointer pb-1">Other Listings</span>
+             </div>
+
+             {filteredProperties.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {filteredProperties.map((property) => (
+                    <PropertyCard key={property.id} property={property} />
+                    ))}
+                </div>
+             ) : (
+                <div className="text-center py-20">
+                    <p className="text-lg font-medium text-gray-900">No matching homes found</p>
+                    <Button variant="link" onClick={() => {
+                        setSearch("");
+                        setPriceMax("any");
+                        setBedrooms("any");
+                        setHomeType("any");
+                    }}>Reset all filters</Button>
+                </div>
+             )}
+             
+             <div className="mt-8 text-center text-xs text-gray-400 py-4 border-t">
+                 Choice Properties Inc. | Updated every 5 minutes.
+             </div>
+         </div>
+      </div>
     </div>
   );
 }
